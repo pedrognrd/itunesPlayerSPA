@@ -11,6 +11,8 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" 
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -119,6 +121,76 @@
                 tabla_canciones.deleteRow(1);
             }
         }
+
+        function sortTableAZ(column) {
+          console.log("En sortTableAZ");
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("tablaCanciones");
+          switching = true;
+          /*Make a loop that will continue until
+          no switching has been done:*/
+          while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+              //start by saying there should be no switching:
+              shouldSwitch = false;
+              /*Get the two elements you want to compare,
+              one from current row and one from the next:*/
+              x = rows[i].getElementsByTagName("TD")[column];
+              y = rows[i + 1].getElementsByTagName("TD")[column];
+              //check if the two rows should switch place:
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                //if so, mark as a switch and break the loop:
+                shouldSwitch = true;
+                break;
+              }
+            }
+            if (shouldSwitch) {
+              /*If a switch has been marked, make the switch
+              and mark that a switch has been done:*/
+              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+              switching = true;
+            }
+          }
+        }
+
+        function sortTableZA(column) {
+          console.log("En sortTableZA");
+          var table, rows, switching, i, x, y, shouldSwitch;
+          table = document.getElementById("tablaCanciones");
+          switching = true;
+          rows = table.rows;
+          console.log("Numero de filas " + rows.length);
+          x = rows[rows.length - 1].getElementsByTagName("TD")[column];
+          console.log("x VALE " + x.innerHTML.toLowerCase());
+          y = rows[rows.length - 2].getElementsByTagName("TD")[column];
+          console.log("y VALE " + y.innerHTML.toLowerCase());
+
+          /*Make a loop that will continue until
+          no switching has been done:*/
+          while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = rows.length - 1; i > 0; i--) {
+              shouldSwitch = false;
+              x = rows[i].getElementsByTagName("TD")[column];
+              y = rows[i - 1].getElementsByTagName("TD")[column];
+              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                 shouldSwitch = true;
+                break;
+              }
+            }
+            if (shouldSwitch) {
+              rows[i].parentNode.insertBefore(rows[i], rows[i - 1]);
+              switching = true;
+            }
+          }
+        }
+        
     </script>
 
     <style>
@@ -233,14 +305,23 @@
             <input class="form-control" type="text" placeholder="Search" aria-label="Search" id="busqueda" value="">
         </div>
         <input type="button" class="btn btn-primary mb-4" value=" Search" onclick="buscarCanciones();" />
+        <p><button onclick="sortTableZA(1)">Sort</button></p>
+
 
         <!-- HOOK para resultados de búsqueda -->
         <table id="tablaCanciones">
             <thead>
                 <tr>
                     <th id="thArtist">Artist</th>
-                    <th id="thTrack">Track name</th>
-                    <th id="thAlbum">Album</th>
+                    <th id="thTrack">
+                        Track name 
+                        <i class="fas fa-angle-down" onclick="sortTableAZ(1)"></i> 
+                        <i class="fas fa-angle-up" onclick="sortTableZA(1)"></i>
+                    </th>
+                    <th id="thAlbum">Album
+                        <i class="fas fa-angle-down" onclick="sortTableAZ(2)"></i> 
+                        <i class="fas fa-angle-up" onclick="sortTableZA(2)"></i>
+                    </th>
                     <th id="thPicture">Picture</th>
                     <th id="thDemo">Demo</th>
                 </tr>
