@@ -1,102 +1,175 @@
-@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+@import 'https://fonts.googleapis.com/css?family=Mada';
+body {
+  height: 100vh;
+  width: 100vw;
+  overflow-x: hidden;
+  background: linear-gradient(rgba(150, 150, 150, 0.5), rgba(150, 150, 150, 0.5)), url(https://goo.gl/vIdGAQ);
+  background-size: 100% 100%;
+  font-family: "Mada", sans-serif;
+}
 
-        body {
-            background-color: #343a40;
-            color: #0d4b5f;
-            font-family: "Open Sans", sans-serif;
-            font-size: 1rem;
-        }
+.base {
+  height: 550px;
+  margin: 100px 0 100px 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #a6a6a6;
+  box-shadow: 0px 0px 30px 6px rgba(0, 0, 0, 0.8);
+}
 
-        audio {
-            border: 0.15rem solid #ce93d8;
-            border-radius: 2rem;
-            width: 90%;
-        }
+.info {
+  margin-top: 30px;
+}
 
-        img {
-            border: none;
-            padding: 0rem;
-            border-radius: 0rem;
-            height: auto;
-            width: 84.5%;
-            object-fit: cover;
-        }
+.pause i {
+  border: 2px solid;
+  border-radius: 100%;
+  padding: 10px;
+  margin: 5px 5px 0 15px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.pause i:hover {
+  color: #e0e0e0;
+  border: 2px solid #e0e0e0;
+  transition: ease-in-out 0.2s;
+}
 
-        main {
-            width: 90%;
-        }
+.songname p {
+  font-size: 18px;
+  margin-left: 20px;
+}
+.songname span {
+  font-style: italic;
+  font-size: 14px;
+}
 
-        table {
-            background-color: #333;
-            color: #fff;
-            width: 100%;
-        }
+.comment i {
+  margin: 10px 8px 0 -8px;
+  color: #24CEDB;
+}
 
-        td,
-        th {
-            padding: 0.5rem 1rem;
-        }
+.favourite i {
+  margin: 10px 8px 0 -8px;
+  color: #24CEDB;
+}
 
-        thead {
-            background-color: #105956;
-            height: 4rem;
-        }
+.repeat i {
+  margin: 10px 8px 0 0;
+}
 
-        tr {
-            border-bottom: 1px solid #fff;
-        }
+.time p {
+  margin-top: 10px;
+}
 
-        #thArtist {
-            width: 16%;
-        }
+.one {
+  border: 1px solid #a6a6a6;
+  width: 89%;
+  margin: 7px 0 0 15px;
+}
 
-        #thTrack {
-            width: 25%;
-        }
+.two {
+  border: 1px solid #24CEDB;
+  width: 65%;
+  margin: -2px 0 0 15px;
+}
 
-        #thAlbum {
-            width: 25%;
-        }
+.track {
+  height: 10px;
+  width: 10px;
+  background-color: #24CEDB;
+  border-radius: 100%;
+  position: absolute;
+  cursor: pointer;
+  margin: -1% 0 0 64%;
+  box-shadow: 0px 0px 10px 2px #24cedb;
+}
 
-        #thPicture {
-            width: 10%;
-        }
+.back i {
+  font-size: 25px;
+  padding: 10px;
+  border: 2px solid #6a6a6a;
+  border-radius: 100%;
+  margin: 60px 0 0 30px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.back i:hover {
+  color: #e0e0e0;
+  border: 2px solid #e0e0e0;
+  transition: ease-in-out 0.2s;
+}
 
-        #thDemo {
-            padding-left: 1.5rem;
-            width: 25%;
-        }
+.bigpause i {
+  font-size: 60px;
+  padding: 12px 10px 12px 14px;
+  border: 2px solid #e0e0e0;
+  border-radius: 100%;
+  margin: 40px 0 0 0;
+  color: #e0e0e0;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.bigpause i:hover {
+  color: #24CEDB;
+  border: 2px solid #24CEDB;
+  transition: ease-in-out 0.2s;
+}
 
+.forward i {
+  font-size: 25px;
+  padding: 10px;
+  border: 2px solid #6a6a6a;
+  border-radius: 100%;
+  margin: 60px 0 0 -170px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.forward i:hover {
+  color: #e0e0e0;
+  border: 2px solid #e0e0e0;
+  transition: ease-in-out 0.2s;
+}
 
-        .active-purple-4 input[type="text"]:focus:not([readonly]) {
-            border: 1px solid #105956;
-            box-shadow: 0 0 0 1px #105956;
-        }
+.random i {
+  font-size: 18px;
+  color: #24CEDB;
+  margin: 75px 0 0 -90px;
+  cursor: pointer;
+}
 
-        .active-purple-3 input[type="text"] {
-            border: 3px solid #105956;
-            box-shadow: 0 0 0 1px#105956;
-            padding: 1.5rem 1rem;
-        }
+.volume i {
+  font-size: 23px;
+  margin: 72px 0 0 -90px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.volume i:hover {
+  color: #24CEDB;
+  transition: ease-in-out 0.2s;
+}
 
+.fullscreen i {
+  font-size: 16px;
+  margin: 76px 0 0 -110px;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+}
+.fullscreen i:hover {
+  color: #24CEDB;
+  transition: ease-in-out 0.2s;
+}
 
-        .player {
-            position: relative;
-            width: auto;
-            border-radius: 0.25rem;
-            border-bottom: 6px solid #3f51b5;
-            border: 0.15rem solid #ce93d8;
-            margin-top: -0.2rem;
-            z-index: 1;
-        }
+a {
+  color: #a6a6a6;
+}
+a:visited {
+  color: #a6a6a6;
+}
 
-        .player:nth-child(even) {
-            background-color: #e7fbf6;
-        }
-
-        .player:nth-child(odd) {
-            background-color: #b9d2cc;
-        }
-
-        @media screen and (max-width: 720px) {
-        }
+.right {
+  background-image: url("https://goo.gl/xuJecQ");
+  background-size: contain;
+  background-color: white;
+  background-repeat: no-repeat;
+  height: 550px;
+}
