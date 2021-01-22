@@ -49,7 +49,7 @@
             xhr.send();
         }
 
-        function buscarCancionesDefault() {
+        function cargarCancionDefault() {
             console.log("Tocó buscar");
             let termino = "Polly";
             let audio_cancion;
@@ -62,6 +62,8 @@
             xhr.open('GET', url_formateada);
             xhr.onreadystatechange = mostrarResultados;
             xhr.send();
+            current_song_index = 0;
+            console.log("current_song_index vale " + current_song_index);
         }
 
         function mostrarResultados() {
@@ -120,6 +122,7 @@
         }
 
         function cargarAnterior() {
+            console.log("current_song_index ANTES vale " + current_song_index);
             if(current_song_index > 0)
             {
                 current_song_index--;
@@ -132,6 +135,7 @@
         }
         
         function cargarSiguiente() {
+            console.log("current_song_index ANTES vale " + current_song_index);
             if(current_song_index < 9)
             {
                 current_song_index++;
@@ -143,7 +147,38 @@
             cargarReproductor(current_song_index);
         }
 
+        function playButton() {
+            icon_play_pause = document.getElementById("iconPlayPause");
+            audio_cancion = document.getElementById("audioCancion");
+            src_cancion = document.getElementById("srcCancion");
+            progress_bar = document.getElementById("progressBar");
+            if (play_pause) {
+                icon_play_pause.innerHTML = "<i class='fas fa-play' aria-hidden='true'></i>";
+                audio_cancion.pause();
+                play_pause = false;
+            } else {
+                icon_play_pause.innerHTML = "<i class='fas fa-pause' aria-hidden='true'></i>";
+                audio_cancion.play(); 
+                play_pause = true;
+                playingMusic();
+            }
+        }
+
+        function playingMusic()
+        {
+            var identity = setInterval(scene, audio_cancion.duration); 
+            function scene() { 
+                if (audio_cancion.currentTime >= audio_cancion.duration) { 
+                    clearInterval(identity); 
+                } else { 
+                    progress_bar.style.width = audio_cancion.currentTime / 30 * 100 + '%'; 
+                } 
+            } 
+        }
+
         function cargarReproductor(index) {
+            console.log("cargarReproductor(index) " + index);
+            current_song_index = index;
             audio_cancion = document.getElementById("audioCancion");
             src_cancion = document.getElementById("srcCancion");
             let img_cancion = document.getElementById("imgCancion");
@@ -161,6 +196,11 @@
             audio_cancion.play();
             play_pause = false;
             playButton();
+            for (let indexTabla = 0; indexTabla < 10; indexTabla++) {
+                document.getElementById(indexTabla).style.backgroundColor = "#333";
+            }
+            document.getElementById(index).style.backgroundColor = "#162f2e";
+            //document.getElementById(index).style.tr:hover = "#background-color: #000;";
         }
 
         function limpiarTabla() {
@@ -240,38 +280,8 @@
           }
         }
 
-        function playButton() {
-            icon_play_pause = document.getElementById("iconPlayPause");
-            audio_cancion = document.getElementById("audioCancion");
-            src_cancion = document.getElementById("srcCancion");
-            progress_bar = document.getElementById("progressBar");
-            if (play_pause) {
-                icon_play_pause.innerHTML = "<i class='fas fa-play' aria-hidden='true'></i>";
-                audio_cancion.pause();
-                play_pause = false;
-            } else {
-                icon_play_pause.innerHTML = "<i class='fas fa-pause' aria-hidden='true'></i>";
-                audio_cancion.play(); 
-                play_pause = true;
-                playingMusic();
-            }
-        }
-
-        function playingMusic()
-        {
-            var identity = setInterval(scene, audio_cancion.duration); 
-            function scene() { 
-                if (audio_cancion.currentTime >= audio_cancion.duration) { 
-                    clearInterval(identity); 
-                } else { 
-                    progress_bar.style.width = audio_cancion.currentTime / 30 * 100 + '%'; 
-                } 
-            } 
-        }
-
         window.onload = function() {
-            buscarCancionesDefault();
-            let boolean = new Boolean(false);
+            cargarCancionDefault();
             //let icon_play_pause = document.getElementById("iconPlayPause");
             //icon_play_pause.addEventListener("click", function(){testBar(boolean)}, false);
         };
@@ -285,6 +295,14 @@
             color: #0d4b5f;
             font-family: "Open Sans", sans-serif;
             font-size: 1rem;
+        }
+
+        .h4, h4 {
+            font-size: 1.3rem;
+        }
+
+        .h5, h5 {
+            font-size: 1.15rem;
         }
 
         a {
@@ -402,17 +420,17 @@
 </head>
 
 <body>
-    <main class="container-fluid mt-5 mb-5 row">
-        <div class="col-xs-1 col-md-1"></div>
+    <main class="container-fluid mt-5 mb-5 ml-0 mr-0 row justify-content-center">
         <!-- Card player -->
-        <div style="width: 18rem; padding-left: 0px; padding-right: 0px;height: 100%; border-radius: 0.25rem; box-shadow: 0px 0px 100px black;" class="col-xs-2 col-md-2 card">
-            <audio id="audioCancion">
-                <source id="srcCancion" src="https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview118/v4/c2/f2/ea/c2f2ea14-ce30-3cd7-14fc-15f75ef3999f/mzaf_2856663077544297354.plus.aac.p.m4a" type="audio/mpeg">
-            </audio>
+        <div class="col-xs-5 col-md-4 col-lg-3 row" style="padding-left: 0px; padding-right: 0px;height: 100%; border-radius: 0.25rem; box-shadow: 0px 0px 100px black; background-color: #fff; border: 1px solid #fff; margin: 0rem 1rem 0rem;">
+            <div class="col-xs-5 col-md-12 col-lg-12">
+                <audio id="audioCancion">
+                    <source id="srcCancion" src="https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview118/v4/c2/f2/ea/c2f2ea14-ce30-3cd7-14fc-15f75ef3999f/mzaf_2856663077544297354.plus.aac.p.m4a" type="audio/mpeg">
+                </audio>
+                <img id="imgCancion" class="card-img-top" src="https://is5-ssl.mzstatic.com/image/thumb/Music118/v4/88/55/9e/88559e57-1ce3-62d4-a453-94e724ddd86e/source/100x100bb.jpg" alt="Card image cap" style="margin: 2rem;width: 85%;display: block;margin-left: auto;margin-right: auto;/*! border: 1px solid rgba(0,0,0,.125); */">
+            </div>
             
-            <img id="imgCancion" class="card-img-top" src="https://is5-ssl.mzstatic.com/image/thumb/Music118/v4/88/55/9e/88559e57-1ce3-62d4-a453-94e724ddd86e/source/100x100bb.jpg" alt="Card image cap" style="margin: 2rem;width: 85%;display: block;margin-left: auto;margin-right: auto;/*! border: 1px solid rgba(0,0,0,.125); */">
-            
-            <div class="card-body" style="padding: 1rem;background-color: #105956;border-radius: 0.25rem;color: #fff;">
+            <div class="col-xs-7 col-md-12 col-lg-12" style="padding: 1rem;background-color: #105956;border-radius: 0.25rem;color: #fff;">
                 <h4 id="trackName" class="card-title mt-3" style="">Polly</h4>
                 <div class="progress mb-3">
                     <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
@@ -433,10 +451,9 @@
                 </div>
             </div>
         </div>
-
         <!-- Card player -->
         <!-- List search -->
-        <div style="width: 18rem; padding-left: 0px; padding-right: 0px;margin-left: 10px; box-shadow: 0px 0px 100px black;" class="col-xs-4 col-md-8 card">
+        <div class="col-xs-5 col-md-7 col-lg-8 row" style="padding-left: 0px; padding-right: 0px; box-shadow: 0px 0px 100px black;border-radius: 0.25rem;border: 1px solid #fff; margin: 0rem 1rem 0rem;">
             <div style="margin-left: 0px;margin-right: 0px;padding-left: 0px;padding-right: 0px;background-color: #000 !important;" class="container-fluid bg-dark card row">
                 <table id="tablaCanciones">
                     <thead style="height: 5.7rem;">
@@ -467,7 +484,6 @@
             </div>
         </div>
         <!-- List search -->
-        <div class="col-xs-1 col-md-1"></div>
     </main>
 </body>
 

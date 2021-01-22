@@ -8,6 +8,10 @@ body {
   font-family: "Mada", sans-serif;
 }
 
+.h5, h5 {
+  font-size: 1.15rem;
+}
+
 .base {
   height: 550px;
   margin: 100px 0 100px 0;
