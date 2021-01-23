@@ -13,6 +13,7 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" 
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="css/styles.css">
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
@@ -23,414 +24,21 @@
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
     <script src="https://kit.fontawesome.com/6b66146ce8.js" crossorigin="anonymous"></script>
-    <script>
-        const DIR_SERVIDOR_ITUNES = "https://itunes.apple.com/search/?media=music&term=";
-        let current_song_index = 0;
-        let audio_cancion;
-        let src_cancion;
-        let progress_bar; 
-        let play_pause = new Boolean(false);
-        let icon_play_pause;
-        let resultados_busqueda;
-        let xhr = new XMLHttpRequest();
-
-        function buscarCanciones() {
-            console.log("Tocó buscar");
-            let termino = document.getElementById("busqueda").value;
-            let audio_cancion;
-            console.log("Tocó buscar " + termino);
-
-            // 1 Componemos la url
-            let url = DIR_SERVIDOR_ITUNES + termino;
-            let url_formateada = encodeURI(url);
-            // 2 Llamamos al servidor
-            xhr.open('GET', url_formateada);
-            xhr.onreadystatechange = mostrarResultados;
-            xhr.send();
-        }
-
-        function cargarCancionDefault() {
-            console.log("Tocó buscar");
-            let termino = "Polly";
-            let audio_cancion;
-            console.log("Tocó buscar " + termino);
-
-            // 1 Componemos la url
-            let url = DIR_SERVIDOR_ITUNES + termino;
-            let url_formateada = encodeURI(url);
-            // 2 Llamamos al servidor
-            xhr.open('GET', url_formateada);
-            xhr.onreadystatechange = mostrarResultados;
-            xhr.send();
-            current_song_index = 0;
-            console.log("current_song_index vale " + current_song_index);
-        }
-
-        function mostrarResultados() {
-            limpiarTabla();
-
-            if (xhr.readyState == 4) {
-                console.log("Respuesta recibida");
-                if (xhr.status == 200) {
-                    console.log("Respuesta buena");
-                    // Parseamos (guardamos en una variable) xhr.responseText
-                    // Y los guardamos en "resultados_busqueda". Lo hemos DESERIALIZADO.
-                    resultados_busqueda = JSON.parse(xhr.responseText);
-                    // De esta manera, tendríamos dos atributos en resultados_busqueda
-                    resultados_busqueda.resultCount;
-                    resultados_busqueda.results;
-
-                    // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
-                    // Deveríamos evaluar que los resultados tienen contenido y si no, mostrar un mensaje
-
-                    // Recorremos "resultados_busqueda.results" con un bucle for, que funcionará hasta 
-                    // la cantidad de "resultados_busqueda.resultCount"
-                    for (let index = 0; index < 10; index++) {
-                        mostrarCancion(resultados_busqueda.results[index], index);
-                    }
-                } else {
-                    console.log("Respuesta mala" + xhr.status);
-                }
-            }
-        }
-
-        function mostrarCancion(cancion, index) {
-            // Aquí encapsulamos los datos de la canción en la tabla
-            let tabla_canciones = document.getElementById("tablaCanciones");
-            let tr_tabla = document.createElement("tr");
-            tr_tabla.setAttribute("id", index, onclick="buscarCanciones();");
-            let artist_name = document.createElement("td");
-            let track_name = document.createElement("td");
-            let collection_name = document.createElement("td");
-            current_song_index = index;
-
-            // encapsulamos los valores a los campos de los td
-            artist_name.innerHTML = cancion.artistName;
-            track_name.innerHTML = cancion.trackName;
-            collection_name.innerHTML = cancion.collectionName;
-
-            // incorporamos los td al tr
-            tr_tabla.appendChild(artist_name);
-            tr_tabla.appendChild(track_name);
-            tr_tabla.appendChild(collection_name);
-            
-            // incorporamos el tr a la tabla
-            tr_tabla.addEventListener('click', function() {
-                cargarReproductor(index) 
-            }, false);
-            tabla_canciones.appendChild(tr_tabla);
-        }
-
-        function cargarAnterior() {
-            console.log("current_song_index ANTES vale " + current_song_index);
-            if(current_song_index > 0)
-            {
-                current_song_index--;
-            } else 
-            {
-                current_song_index = 0;            
-            }
-            console.log("current_song_index vale " + current_song_index);
-            cargarReproductor(current_song_index);
-        }
-        
-        function cargarSiguiente() {
-            console.log("current_song_index ANTES vale " + current_song_index);
-            if(current_song_index < 9)
-            {
-                current_song_index++;
-            } else 
-            {
-                current_song_index = 9;            
-            }
-            console.log("current_song_index vale " + current_song_index);
-            cargarReproductor(current_song_index);
-        }
-
-        function playButton() {
-            icon_play_pause = document.getElementById("iconPlayPause");
-            audio_cancion = document.getElementById("audioCancion");
-            src_cancion = document.getElementById("srcCancion");
-            progress_bar = document.getElementById("progressBar");
-            if (play_pause) {
-                icon_play_pause.innerHTML = "<i class='fas fa-play' aria-hidden='true'></i>";
-                audio_cancion.pause();
-                play_pause = false;
-            } else {
-                icon_play_pause.innerHTML = "<i class='fas fa-pause' aria-hidden='true'></i>";
-                audio_cancion.play(); 
-                play_pause = true;
-                playingMusic();
-            }
-        }
-
-        function playingMusic()
-        {
-            var identity = setInterval(scene, audio_cancion.duration); 
-            function scene() { 
-                if (audio_cancion.currentTime >= audio_cancion.duration) { 
-                    clearInterval(identity); 
-                } else { 
-                    progress_bar.style.width = audio_cancion.currentTime / 30 * 100 + '%'; 
-                } 
-            } 
-        }
-
-        function cargarReproductor(index) {
-            console.log("cargarReproductor(index) " + index);
-            current_song_index = index;
-            audio_cancion = document.getElementById("audioCancion");
-            src_cancion = document.getElementById("srcCancion");
-            let img_cancion = document.getElementById("imgCancion");
-            let artist_name = document.getElementById("artistName");
-            let track_name = document.getElementById("trackName");
-            let collection_name = document.getElementById("collectionName");
-            let song_src = resultados_busqueda.results[index].previewUrl;
-            src_cancion.src = resultados_busqueda.results[index].previewUrl;
-            img_cancion.src = resultados_busqueda.results[index].artworkUrl100;
-            artist_name.innerHTML = resultados_busqueda.results[index].artistName;
-            track_name.innerHTML = resultados_busqueda.results[index].trackName;
-            collection_name.innerHTML = resultados_busqueda.results[index].collectionName;
-            src_cancion.innerHTML = song_src;
-            audio_cancion.load();
-            audio_cancion.play();
-            play_pause = false;
-            playButton();
-            for (let indexTabla = 0; indexTabla < 10; indexTabla++) {
-                document.getElementById(indexTabla).style.backgroundColor = "#333";
-            }
-            document.getElementById(index).style.backgroundColor = "#162f2e";
-            //document.getElementById(index).style.tr:hover = "#background-color: #000;";
-        }
-
-        function limpiarTabla() {
-            // Borramos los campos tr de la tabla si ya se había pintado algo
-            var tabla_canciones = document.getElementById("tablaCanciones");
-            while (tabla_canciones.rows.length > 1) {
-                tabla_canciones.deleteRow(1);
-            }
-        }
-
-        function sortTableAZ(column) {
-          console.log("En sortTableAZ");
-          var table, rows, switching, i, x, y, shouldSwitch;
-          table = document.getElementById("tablaCanciones");
-          switching = true;
-          /*Make a loop that will continue until
-          no switching has been done:*/
-          while (switching) {
-            //start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            /*Loop through all table rows (except the
-            first, which contains table headers):*/
-            for (i = 1; i < (rows.length - 1); i++) {
-              //start by saying there should be no switching:
-              shouldSwitch = false;
-              /*Get the two elements you want to compare,
-              one from current row and one from the next:*/
-              x = rows[i].getElementsByTagName("TD")[column];
-              y = rows[i + 1].getElementsByTagName("TD")[column];
-              //check if the two rows should switch place:
-              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                //if so, mark as a switch and break the loop:
-                shouldSwitch = true;
-                break;
-              }
-            }
-            if (shouldSwitch) {
-              /*If a switch has been marked, make the switch
-              and mark that a switch has been done:*/
-              rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-              switching = true;
-            }
-          }
-        }
-
-        function sortTableZA(column) {
-          console.log("En sortTableZA");
-          var table, rows, switching, i, x, y, shouldSwitch;
-          table = document.getElementById("tablaCanciones");
-          switching = true;
-          rows = table.rows;
-          console.log("Numero de filas " + rows.length);
-          x = rows[rows.length - 1].getElementsByTagName("TD")[column];
-          console.log("x VALE " + x.innerHTML.toLowerCase());
-          y = rows[rows.length - 2].getElementsByTagName("TD")[column];
-          console.log("y VALE " + y.innerHTML.toLowerCase());
-
-          /*Make a loop that will continue until
-          no switching has been done:*/
-          while (switching) {
-            switching = false;
-            rows = table.rows;
-            for (i = rows.length - 1; i > 0; i--) {
-              shouldSwitch = false;
-              x = rows[i].getElementsByTagName("TD")[column];
-              y = rows[i - 1].getElementsByTagName("TD")[column];
-              if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                 shouldSwitch = true;
-                break;
-              }
-            }
-            if (shouldSwitch) {
-              rows[i].parentNode.insertBefore(rows[i], rows[i - 1]);
-              switching = true;
-            }
-          }
-        }
-
-        window.onload = function() {
-            cargarCancionDefault();
-            //let icon_play_pause = document.getElementById("iconPlayPause");
-            //icon_play_pause.addEventListener("click", function(){testBar(boolean)}, false);
-        };
-    </script>
-
-    <style>
-        @import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
-
-        body {
-            background-color: #194979;
-            color: #0d4b5f;
-            font-family: "Open Sans", sans-serif;
-            font-size: 1rem;
-        }
-
-        .h4, h4 {
-            font-size: 1.3rem;
-        }
-
-        .h5, h5 {
-            font-size: 1.15rem;
-        }
-
-        a {
-            color: #fff;
-            text-decoration: none;
-            background-color: transparent;
-        }
-
-        audio {
-            border: 0.15rem solid #ce93d8;
-            border-radius: 2rem;
-            width: 90%;
-        }
-
-        img {
-            border: none;
-            padding: 0rem;
-            border-radius: 0rem;
-            height: auto;
-            width: 84.5%;
-            object-fit: cover;
-        }
-
-        main {
-            width: 90%;
-        }
-
-        table {
-            background-color: #333;
-            color: #fff;
-            width: 100%;
-        }
-
-        td,
-        th {
-            padding: 0.5rem 1rem;
-        }
-
-        thead {
-            background-color: #105956;
-            height: 4rem;
-        }
-
-        thead tr:hover {
-            background-color: #105956;
-            cursor: context-menu;
-        }
-
-        tr {
-            border-bottom: 1px solid #fff;
-            height: 4rem;
-        }
-
-        tr:hover {
-            background-color: #000;
-            color: #fff;
-            cursor: pointer;
-        }
-
-        #thArtist {
-            width: 16%;
-        }
-
-        #thTrack {
-            width: 25%;
-        }
-
-        #thAlbum {
-            width: 25%;
-        }
-
-        #thPicture {
-            width: 10%;
-        }
-
-        #thDemo {
-            padding-left: 1.5rem;
-            width: 25%;
-        }
-
-
-        .active-purple-4 input[type="text"]:focus:not([readonly]) {
-            border: 1px solid #105956;
-            box-shadow: 0 0 0 1px #105956;
-        }
-
-        .active-purple-3 input[type="text"] {
-            border: 3px solid #105956;
-            box-shadow: 0 0 0 1px#105956;
-            padding: 1.5rem 1rem;
-        }
-
-
-        .player {
-            position: relative;
-            width: auto;
-            border-radius: 0.25rem;
-            border-bottom: 6px solid #3f51b5;
-            border: 0.15rem solid #ce93d8;
-            margin-top: -0.2rem;
-            z-index: 1;
-        }
-
-        .player:nth-child(even) {
-            background-color: #e7fbf6;
-        }
-
-        .player:nth-child(odd) {
-            background-color: #b9d2cc;
-        }
-
-        @media screen and (max-width: 720px) {
-        }
-    </style>
+    <script src="js/scripts.js"></script> 
 </head>
 
 <body>
     <main class="container-fluid mt-5 mb-5 ml-0 mr-0 row justify-content-center">
         <!-- Card player -->
-        <div class="col-xs-5 col-md-4 col-lg-3 row" style="padding-left: 0px; padding-right: 0px;height: 100%; border-radius: 0.25rem; box-shadow: 0px 0px 100px black; background-color: #fff; border: 1px solid #fff; margin: 0rem 1rem 0rem;">
-            <div class="col-xs-5 col-md-12 col-lg-12">
+        <div style="padding-left: 0px; padding-right: 0px;height: 100%; border-radius: 0.25rem; box-shadow: 0px 0px 100px black; background-color: #fff; border: 1px solid #fff; margin: 0rem 1rem 0rem;width: 100%;" class="col-xs-12 col-md-12 col-lg-3 mb-4 row">
+            <div class="col-xs-4 col-md-4 col-lg-12" style="width: 40%;">
                 <audio id="audioCancion">
                     <source id="srcCancion" src="https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview118/v4/c2/f2/ea/c2f2ea14-ce30-3cd7-14fc-15f75ef3999f/mzaf_2856663077544297354.plus.aac.p.m4a" type="audio/mpeg">
                 </audio>
                 <img id="imgCancion" class="card-img-top" src="https://is5-ssl.mzstatic.com/image/thumb/Music118/v4/88/55/9e/88559e57-1ce3-62d4-a453-94e724ddd86e/source/100x100bb.jpg" alt="Card image cap" style="margin: 2rem;width: 85%;display: block;margin-left: auto;margin-right: auto;/*! border: 1px solid rgba(0,0,0,.125); */">
             </div>
             
-            <div class="col-xs-7 col-md-12 col-lg-12" style="padding: 1rem;background-color: #105956;border-radius: 0.25rem;color: #fff;">
+            <div style="padding: 1rem;background-color: #105956;border-radius: 0.25rem;color: #fff;width: 60%;" class="col-xs-8 col-md-8 p-4 col-lg-12">
                 <h4 id="trackName" class="card-title mt-3" style="">Polly</h4>
                 <div class="progress mb-3">
                     <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
@@ -438,14 +46,14 @@
                 <h5 id="artistName" class="card-text">Nirvana</h5>
                 <h6 id="collectionName" style="font-size: 0.8rem;">MTV Unplugged In New York (Live)</h6>
                 
-                <div style="text-align: center;font-size: 2rem;" class="mt-4 mb-2 row">
-                    <div id="iconPrevious" class="col-xs-4 col-md-4"onclick="cargarAnterior();">
+                <div style="text-align: center;font-size: 2rem;" class="m-0 mt-4 row">
+                    <div id="iconPrevious" onclick="playPrevoius();" class="col-xs-4 col-md-4 m-0" style="width: 32%;">
                         <i aria-hidden="true" style="" class="fas fa-backward"></i>
                     </div>
-                    <div id="iconPlayPause" class="col-xs-4 col-md-4" onclick="playButton();">
+                    <div id="iconPlayPause" onclick="playPause();" class="col-xs-4 col-md-4 m-0" style="width: 32%;">
                         <i class="fas fa-play" aria-hidden="true" style=""></i>
                     </div>
-                    <div id="iconNext" class="col-xs-4 col-md-4" onclick="cargarSiguiente();">
+                    <div id="iconNext" onclick="playNext();" class="col-xs-4 col-md-4 m-0" style="width: 32%;">
                         <i class="fas fa-forward" aria-hidden="true" style=""></i>
                     </div>
                 </div>
@@ -453,7 +61,7 @@
         </div>
         <!-- Card player -->
         <!-- List search -->
-        <div class="col-xs-5 col-md-7 col-lg-8 row" style="padding-left: 0px; padding-right: 0px; box-shadow: 0px 0px 100px black;border-radius: 0.25rem;border: 1px solid #fff; margin: 0rem 1rem 0rem;">
+        <div style="padding-left: 0px; padding-right: 0px; box-shadow: 0px 0px 100px black;border-radius: 0.25rem;border: 1px solid #fff; margin: 0rem 1rem 0rem;width: 100%;" class="col-xs-12 col-md-12 col-lg-8 row">
             <div style="margin-left: 0px;margin-right: 0px;padding-left: 0px;padding-right: 0px;background-color: #000 !important;" class="container-fluid bg-dark card row">
                 <table id="tablaCanciones">
                     <thead style="height: 5.7rem;">
@@ -478,7 +86,7 @@
                 <nav class="navbar navbar-dark mt-4 mb-4 ml-2">
                     <form class="form-inline" _lpchecked="1">
                         <input type="text" placeholder="Search" aria-label="Search" id="busqueda" value="" style="width: 400px;border: 3px solid #105956;box-shadow: 0 0 0 1px #105956;padding: 1.5rem 1rem;" class="form-control mr-sm-5">
-                        <button value=" Search" onclick="buscarCanciones();" type="button" class="btn btn-primary mb-4  my-2 my-sm-0" style="padding: 0.8rem 2rem;background-color: #105956;border-color: #105956;">Buscar</button>
+                        <button value=" Search" onclick="searchingSongs();" type="button" class="btn btn-primary mb-4  my-2 my-sm-0" style="padding: 0.8rem 2rem;background-color: #105956;border-color: #105956;">Buscar</button>
                     </form>
                 </nav>
             </div>
