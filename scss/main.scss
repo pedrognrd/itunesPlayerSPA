@@ -1,0 +1,239 @@
+@charset "UTF-8";
+
+@import url("https://fonts.googleapis.com/css?family=Open+Sans&display=swap");
+
+/// Regular font family
+/// @type List
+$text-font-stack: 'Open Sans', sans-serif !default;
+
+/// Colors palette map
+/// @prop {String} keys - Keys are identifiers mapped to blue tones and colors for stats values
+/// @prop {Map} values - Values are each color expressed in hsl values
+$palette: (
+  black:  hsl(0, 0%, 0%),
+  blue:  hsl(210, 66%, 29%),
+  green:  hsl(178, 70%, 21%),
+  greenDark:  hsl(178, 25%, 14%),
+  grey: hsl(0, 0%, 20%),
+  white: hsl(0, 0%, 100%)
+)!default;
+
+$size: (
+    percentages: (
+      0: 0%,
+      25: 25%,
+      50: 50%,
+      75: 75%,
+      100: 100%
+    ),
+    rem: (
+      1: 0rem,
+      2: 0.5rem,
+      3: 1rem,
+      4: 1.5rem,
+      5: 2rem
+    ),
+    spacers: (
+      auto: auto,
+      0rem: 0rem
+    )
+)!default;
+
+// FUNCTIONS //
+// FUNCTIONS //
+
+// MIXINS //
+@mixin backgroundColor($color) {
+  background-color: $color;
+}
+
+@mixin border($sizerem, $variable, $kind) {
+  border-width: (map-get(map-get($size, rem), $sizerem) * $variable);
+  border-style: $kind;
+}
+
+@mixin color($color) {
+  color: $color;
+}
+
+@mixin fontSize($size) {
+  font-size: $size;
+}
+
+@mixin height($sizerem, $variable) {
+  height: (map-get(map-get($size, rem), $sizerem) * $variable);
+}
+
+@mixin margin($sizerem1, $variable1, $sizerem2, $variable2) {
+  margin: (map-get(map-get($size, rem), $sizerem1) * $variable1) (map-get(map-get($size, rem), $sizerem2) * $variable2);
+}
+
+@mixin padding($sizerem1, $variable1, $sizerem2, $variable2) {
+  padding: (map-get(map-get($size, rem), $sizerem1) * $variable1) (map-get(map-get($size, rem), $sizerem2) * $variable2);
+}
+
+@mixin width($sizerem, $variable) {
+  width: (map-get(map-get($size, percentages), $sizerem) * $variable);
+}
+// MIXINS //
+
+body {
+  @include backgroundColor(map-get($palette, blue));
+  font-family: $text-font-stack;
+  @include fontSize(map-get(map-get($size, rem), 3));
+}
+
+// -- H TAGS
+@for $i from 4 through 5 {
+  h#{$i} {
+    //@include fontSize(map-get(map-get($size, rem), 3));
+    font-size: (map-get(map-get($size, rem), 3) * (2 - ($i/5.9)));
+  }
+}
+
+img {
+  border: none;
+  border-radius: 0rem;
+  height: auto;
+  object-fit: cover;
+  padding: 0rem;
+  @include width(50, 1.69); 
+}
+
+main {
+  @include width(100, 0.9);
+}
+
+thead, .player_controls {
+  @include backgroundColor(map-get($palette, green));
+}
+
+table, tr:hover, .player_controls {
+  @include color(map-get($palette, white));
+}
+
+thead, tr {
+  @include height(5, 2);
+}
+
+table {
+  @include backgroundColor(map-get($palette, grey));
+  width: (map-get(map-get($size, percentages), 100));
+}
+
+td,
+th {
+    padding: (map-get(map-get($size, rem), 2)) (map-get(map-get($size, rem), 3));
+}
+
+tr {
+  border-bottom: (map-get(map-get($size, rem), 3) * 0.1) solid (map-get($palette, white));
+}
+
+tr:hover {
+  @include backgroundColor(map-get($palette, black));
+  color: #fff;
+  cursor: pointer;
+}
+
+#button_search {
+  @include backgroundColor(map-get($palette, green));
+  border-color: map-get($palette, green);
+  @include padding(3, 0.8, 5, 1);
+}
+
+#errorModal {
+  top: (map-get(map-get($size, percentages), 25) - 5);
+}
+
+#img_song {
+  display: block;
+  margin: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  @include width(50, 1.2);
+}
+
+#input_search {
+  @include border(3, 0.3, solid);
+  border-color: (map-get($palette, green));
+  box-shadow: 0 0 0 1px (map-get($palette, green));
+  @include padding(3, 1.5, 3, 1);
+  width: 400px;
+}
+
+#song_wrong_alert {
+  //left: 40%;
+  left: (map-get(map-get($size, percentages), 50) * 0.8);
+  top: (map-get(map-get($size, percentages), 50) * 0.8);
+  margin-left: -width;
+  margin-top: -height;
+  position: absolute;
+}
+
+#thAlbum {
+  @include width(25, 1);
+}
+
+#thArtist {
+  @include width(25, 0.64);
+}
+  
+#thDemo {
+  padding-left: 1.5rem;
+  @include width(25, 1);
+}
+
+#thPicture {
+  @include width(25, 0.4);
+}
+
+#thTrack {
+  @include width(25, 1);
+}
+
+.my_container {
+  @include border(3, 0.1, solid);
+  border-color: (map-get($palette, white));
+  border-radius: 0.25rem;
+  box-shadow: 0px 0px 100px black; 
+  height: 100%;
+  @include margin(1, 1, 3, 1);
+  @include padding(1, 1, 1, 1); 
+  @include width(100, 1);
+}
+
+.player {
+  @include backgroundColor(map-get($palette, white));
+}
+
+.player_controls {
+  border-radius: 0.25rem;
+  @include padding(3, 1, 3, 1); 
+  @include width(50, 1.2); 
+}
+
+.player_image {
+  @include width(50, 0.8);
+}
+
+.table_songs {
+  background-color: #000 !important;
+  @include margin(1, 1, 1, 1);
+  @include padding(1, 1, 1, 1); 
+}
+
+@media screen and (max-width: 768px) {
+  #img_song {
+    @include width(50, 1.6); 
+  }
+  
+  #input_search {
+      margin-right: 2rem;
+      width: 300px;
+  }            
+
+  .my_container {
+    @include margin(1, 1, 1, 1);
+  }
+}
