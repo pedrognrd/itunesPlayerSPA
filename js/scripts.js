@@ -8,14 +8,15 @@ let playing_default_song = new Boolean(true);
 let icon_play_pause;
 let search_results;
 let xhr = new XMLHttpRequest();
+let defaultSong;
+let defaultSongLoaded = new Boolean(false);
+let modal_message;
 
 // This function loads by default a song when page is loaded
 function loadingDefaultSong() {
-    let defaultSong = "Polly";
+    defaultSong = "Polly";
     // 1 Building the url
     let url = DIR_SERVIDOR_ITUNES + defaultSong;
-    console.log("defaultSong " + defaultSong);
-    console.log("url " + url);
     let url_formatted = encodeURI(url);
     // 2 Ajax call to the server
     xhr.open('GET', url_formatted);
@@ -25,17 +26,53 @@ function loadingDefaultSong() {
     current_song_index = 0;
 }
 
+// This function evaluates the possible errors caused by the searched song
+function errorsEvaluation(error) {
+    modal_message = document.getElementById('modal_message');
+
+    /*if (error == 0) {
+        modal_message.innerHTML = "You must write a song in the Search area";
+        openModal();
+    }
+    if (error == 1) {
+        modal_message.innerHTML = "The song <span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> doest not exist. Try again";
+        openModal();
+    }
+    if (error == 2) {
+        modal_message.innerHTML = "<span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> hasn't been found. Try again";
+        openModal();
+    }*/
+
+    switch (error) {
+        case 0:
+            modal_message.innerHTML = "You must write a song in the Search area";
+            openModal();
+            break;
+        case 1:
+            modal_message.innerHTML = "The song <span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> doest not exist. Try again";
+            openModal();
+            break;
+        case 2:
+            modal_message.innerHTML = "<span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> hasn't been found. Try again";
+            openModal();
+            break;
+      }
+}
+
 // This function make the AJAX call based on the song type in the search element in the DOM
 function searchingSongs() {
     let searchedSong = document.getElementById("input_search").value.toLowerCase();
-    // 1 Building the url
-    let url = DIR_SERVIDOR_ITUNES + capitalizeFirstLetter(searchedSong);
-    console.log("url " + url);
-    let url_formatted = encodeURI(url);
-    // 2 Ajax call to the server
-    xhr.open('GET', url_formatted);
-    xhr.onreadystatechange = loadingTable;
-    xhr.send();
+    if (searchedSong.length <= 0) {
+        errorsEvaluation(0);
+    } else {
+        // 1 Building the url
+        let url = DIR_SERVIDOR_ITUNES + capitalizeFirstLetter(searchedSong);
+        let url_formatted = encodeURI(url);
+        // 2 Ajax call to the server
+        xhr.open('GET', url_formatted);
+        xhr.onreadystatechange = loadingTable;
+        xhr.send();
+    }
 }
 
 // This function capitalize the first letter of the search string
@@ -45,8 +82,6 @@ function capitalizeFirstLetter(string) {
 
 // This function loads the songs returned by the AJAX call
 function loadingTable() {
-    // Table is cleaned before loading the songs
-    cleaningTable();
     // If the AJAX call was a success, the table is loaded
     if (xhr.readyState == 4) {
         console.log("Response received");
@@ -59,15 +94,23 @@ function loadingTable() {
             search_result.resultCount;
             search_result.results;
 
-            // Looping "search_results.results" which will load ten songs
-            for (let index = 0; index < 10; index++) {
-                // Loading the data song in each row of the table
-                loadingSongsInTable(search_result.results[index], index);
+            if (search_result.results.length > 0) {
+                // Table is cleaned before loading the songs
+                cleaningTable();
+                // Looping "search_results.results" which will load ten songs
+                for (let index = 0; index < 10; index++) {
+                    // Loading the data song in each row of the table
+                    loadingSongsInTable(search_result.results[index], index);
+                }
+            } else {
+                // There is no song regarding the Search string typed
+                errorsEvaluation(1);
             }
         } else {
-            // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
-            // Deveríamos evaluar que los resultados tienen contenido y si no, mostrar un mensaje
-            console.log("Wrong response" + xhr.status);
+            // There is no song
+            console.log("Wrong readyState " + xhr.readyState);
+            console.log("Wrong status " + xhr.status);
+            errorsEvaluation(2);
         }
     } else {
         // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
@@ -276,14 +319,20 @@ function sortTableZA(column) {
 }
 
 function openModal() {
-    document.getElementById("backdrop").style.display = "block"
-    document.getElementById("exampleModal").style.display = "block"
-    document.getElementById("exampleModal").className += "show"
+    document.getElementById("backdrop").style.display = "block";
+    document.getElementById("errorModal").style.display = "block";
+    document.getElementById("errorModal").className += "show";
 }
 function closeModal() {
-    document.getElementById("backdrop").style.display = "none"
-    document.getElementById("exampleModal").style.display = "none"
-    document.getElementById("exampleModal").className += document.getElementById("exampleModal").className.replace("show", "")
+    console.log("defaultSongLoaded " + defaultSongLoaded);
+    if (defaultSongLoaded) {
+        loadingDefaultSong();
+    } else {
+        searchingSongs();
+    }
+    document.getElementById("backdrop").style.display = "none";
+    document.getElementById("errorModal").style.display = "none";
+    document.getElementById("errorModal").className += document.getElementById("errorModal").className.replace("show", "");
 }
 
 // When the user clicks anywhere outside of the modal, close it
@@ -297,6 +346,6 @@ window.onclick = function (event) {
 // This function loads the default song when the page is loaded
 window.onload = function () {
     // Get the modal
-    var modal = document.getElementById('exampleModal');
+    var modal = document.getElementById('errorModal');
     loadingDefaultSong();
 };
