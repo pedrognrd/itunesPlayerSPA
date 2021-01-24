@@ -6,7 +6,7 @@ let progress_bar;
 let play_pause = new Boolean(false);
 let playing_default_song = new Boolean(true);
 let icon_play_pause;
-let resultados_busqueda;
+let search_results;
 let xhr = new XMLHttpRequest();
 
 // This function loads by default a song when page is loaded
@@ -14,6 +14,8 @@ function loadingDefaultSong() {
     let defaultSong = "Polly";
     // 1 Building the url
     let url = DIR_SERVIDOR_ITUNES + defaultSong;
+    console.log("defaultSong " + defaultSong);
+    console.log("url " + url);
     let url_formatted = encodeURI(url);
     // 2 Ajax call to the server
     xhr.open('GET', url_formatted);
@@ -23,11 +25,12 @@ function loadingDefaultSong() {
     current_song_index = 0;
 }
 
-// This make the AJAX call based on the song type in the search element in the DOM
+// This function make the AJAX call based on the song type in the search element in the DOM
 function searchingSongs() {
-    let searchedSong = document.getElementById("busqueda").value;
+    let searchedSong = document.getElementById("input_search").value.toLowerCase();
     // 1 Building the url
-    let url = DIR_SERVIDOR_ITUNES + searchedSong;
+    let url = DIR_SERVIDOR_ITUNES + capitalizeFirstLetter(searchedSong);
+    console.log("url " + url);
     let url_formatted = encodeURI(url);
     // 2 Ajax call to the server
     xhr.open('GET', url_formatted);
@@ -35,15 +38,9 @@ function searchingSongs() {
     xhr.send();
 }
 
-// This function loads the songs returned by the AJAX call
-function loadingTable(searchedSong) {
-    // 1 Building the url
-    let url = DIR_SERVIDOR_ITUNES + searchedSong;
-    let url_formatted = encodeURI(url);
-    // 2 Ajax call to the server
-    xhr.open('GET', url_formatted);
-    xhr.onreadystatechange = loadingTable;
-    xhr.send();
+// This function capitalize the first letter of the search string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 // This function loads the songs returned by the AJAX call
@@ -52,67 +49,67 @@ function loadingTable() {
     cleaningTable();
     // If the AJAX call was a success, the table is loaded
     if (xhr.readyState == 4) {
-        console.log("Respuesta recibida");
+        console.log("Response received");
         if (xhr.status == 200) {
-            console.log("Respuesta buena");
-            // Parseamos (guardamos en una variable) xhr.responseText
-            // Y los guardamos en "resultados_busqueda". Lo hemos DESERIALIZADO.
-            resultados_busqueda = JSON.parse(xhr.responseText);
-            // De esta manera, tendríamos dos atributos en resultados_busqueda
-            resultados_busqueda.resultCount;
-            resultados_busqueda.results;
+            console.log("Successful response");
+            // We parse (saving in a variable) xhr.responseText
+            // And we save it in "search_result". We have DESERIALIZED it.
+            search_result = JSON.parse(xhr.responseText);
+            // In this way, we have two attributes in search_result
+            search_result.resultCount;
+            search_result.results;
 
             // Looping "search_results.results" which will load ten songs
             for (let index = 0; index < 10; index++) {
                 // Loading the data song in each row of the table
-                loadingSongsInTable(resultados_busqueda.results[index], index);
+                loadingSongsInTable(search_result.results[index], index);
             }
         } else {
             // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
             // Deveríamos evaluar que los resultados tienen contenido y si no, mostrar un mensaje
-            console.log("Respuesta mala" + xhr.status);
+            console.log("Wrong response" + xhr.status);
         }
     } else {
         // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
         // Deveríamos evaluar que los resultados tienen contenido y si no, mostrar un mensaje
-        console.log("Respuesta mala" + xhr.status);
+        console.log("Wrong response" + xhr.status);
     }
 }
 
 // This function cleans the table before loading the songs
 function cleaningTable() {
-    var tabla_canciones = document.getElementById("tablaCanciones");
-    while (tabla_canciones.rows.length > 1) {
-        tabla_canciones.deleteRow(1);
+    var songs_table = document.getElementById("songsTable");
+    while (songs_table.rows.length > 1) {
+        songs_table.deleteRow(1);
     }
 }
 
 // This function Loads the data song in each row of the table
 function loadingSongsInTable(cancion, index) {
-    // Aquí encapsulamos los datos de la canción en la tabla
-    let tabla_canciones = document.getElementById("tablaCanciones");
-    let tr_tabla = document.createElement("tr");
-    tr_tabla.setAttribute("id", index, onclick = "searchingSongs();");
+    // Encapsulating the song data in the table
+    let songs_table = document.getElementById("songsTable");
+    let tr_table = document.createElement("tr");
+    tr_table.setAttribute("id", index, onclick = "searchingSongs();");
     let artist_name = document.createElement("td");
     let track_name = document.createElement("td");
     let collection_name = document.createElement("td");
     current_song_index = index;
 
-    // encapsulamos los valores a los campos de los td
+    // Encapsulating the values to the fields of the td
     artist_name.innerHTML = cancion.artistName;
     track_name.innerHTML = cancion.trackName;
     collection_name.innerHTML = cancion.collectionName;
 
-    // incorporamos los td al tr
-    tr_tabla.appendChild(artist_name);
-    tr_tabla.appendChild(track_name);
-    tr_tabla.appendChild(collection_name);
+    // Appending the td elemnents to a tr element
+    tr_table.appendChild(artist_name);
+    tr_table.appendChild(track_name);
+    tr_table.appendChild(collection_name);
 
-    // incorporamos el tr a la tabla
-    tr_tabla.addEventListener('click', function () {
+    // Appending tr element to the talbe
+    tr_table.addEventListener('click', function () {
         loadingPlayer(index)
     }, false);
-    tabla_canciones.appendChild(tr_tabla);
+    songs_table.appendChild(tr_table);
 }
 
 // This function controls the Player
@@ -120,25 +117,27 @@ function loadingPlayer(index) {
     // Capturing and setting the elements related with the loaded song in the DOM
     current_song_index = index;
     audio_song = document.getElementById("audioCancion");
-    src_cancion = document.getElementById("srcCancion");
-    let img_cancion = document.getElementById("imgCancion");
+    src_cancion = document.getElementById("srcSong");
+    let img_song
+     = document.getElementById("img_song");
     let artist_name = document.getElementById("artistName");
     let track_name = document.getElementById("trackName");
     let collection_name = document.getElementById("collectionName");
-    let song_src = resultados_busqueda.results[index].previewUrl;
-    src_cancion.src = resultados_busqueda.results[index].previewUrl;
-    img_cancion.src = resultados_busqueda.results[index].artworkUrl100;
-    artist_name.innerHTML = resultados_busqueda.results[index].artistName;
-    track_name.innerHTML = resultados_busqueda.results[index].trackName;
-    collection_name.innerHTML = resultados_busqueda.results[index].collectionName;
+    let song_src = search_result.results[index].previewUrl;
+    src_cancion.src = search_result.results[index].previewUrl;
+    img_song
+    .src = search_result.results[index].artworkUrl100;
+    artist_name.innerHTML = search_result.results[index].artistName;
+    track_name.innerHTML = search_result.results[index].trackName;
+    collection_name.innerHTML = search_result.results[index].collectionName;
     src_cancion.innerHTML = song_src;
     audio_song.load();
     audio_song.play();
     play_pause = false;
     playPause();
     // Applying default color to all the rows in the table
-    for (let indexTabla = 0; indexTabla < 10; indexTabla++) {
-        document.getElementById(indexTabla).style.backgroundColor = "#333";
+    for (let indexTable = 0; indexTable < 10; indexTable++) {
+        document.getElementById(indexTable).style.backgroundColor = "#333";
     }
     // Highlighting the row clicked in the table
     document.getElementById(index).style.backgroundColor = "#162f2e";
@@ -149,7 +148,7 @@ function playPause() {
     // Capturing elements related with the Play / Pause button in the DOM
     icon_play_pause = document.getElementById("iconPlayPause");
     audio_song = document.getElementById("audioCancion");
-    src_cancion = document.getElementById("srcCancion");
+    src_cancion = document.getElementById("srcSong");
     if (playing_default_song) {
         current_song_index = 0;
         playing_default_song = false;
@@ -213,7 +212,7 @@ function loadingProgressBar() {
 function sortTableAZ(column) {
     var table, rows, switching, i, x, y, shouldSwitch;
     // Capturing the table element in the DOM
-    table = document.getElementById("tablaCanciones");
+    table = document.getElementById("songsTable");
     switching = true;
     //Looping while switching
     while (switching) {
@@ -221,13 +220,11 @@ function sortTableAZ(column) {
         switching = false;
         // Capturing the rows element in the DOM
         rows = table.rows;
-        /*Looping through all table rows (except the
-        first, which contains table headers):*/
+        //Looping through all table rows (except the first, which contains table headers)
         for (i = 1; i < (rows.length - 1); i++) {
             //start by saying there should be no switching
             shouldSwitch = false;
-            /*Get the two elements to compare,
-            one from current row and one from the next:*/
+            //Get the two elements to compare, one from current row and one from the next
             x = rows[i].getElementsByTagName("TD")[column];
             y = rows[i + 1].getElementsByTagName("TD")[column];
             //check if the two rows should switch place:
@@ -238,8 +235,7 @@ function sortTableAZ(column) {
             }
         }
         if (shouldSwitch) {
-            /*If a switch has been marked, make the switch
-            and mark that a switch has been done:*/
+            //If a switch has been marked, make the switch and mark that a switch has been done
             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
             switching = true;
         }
@@ -249,7 +245,7 @@ function sortTableAZ(column) {
 // This function sorts table from Z to A
 function sortTableZA(column) {
     var table, rows, switching, i, x, y, shouldSwitch;
-    table = document.getElementById("tablaCanciones");
+    table = document.getElementById("songsTable");
     switching = true;
 
     //Looping while switching
@@ -258,13 +254,11 @@ function sortTableZA(column) {
         switching = false;
         // Capturing the rows element in the DOM
         rows = table.rows;
-        /*Looping through all table rows (except the
-        first, which contains table headers):*/
+        // Looping through all table rows (except the first, which contains table headers)
         for (i = rows.length - 1; i > 0; i--) {
             //start by saying there should be no switching
             shouldSwitch = false;
-            /*Get the two elements to compare,
-            one from current row and one from the previous:*/
+            // Get the two elements to compare, one from current row and one from the previous
             x = rows[i].getElementsByTagName("TD")[column];
             y = rows[i - 1].getElementsByTagName("TD")[column];
             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
@@ -274,8 +268,7 @@ function sortTableZA(column) {
             }
         }
         if (shouldSwitch) {
-            /*If a switch has been marked, make the switch
-            and mark that a switch has been done:*/
+            // If a switch has been marked, make the switch and mark that a switch has been done
             rows[i].parentNode.insertBefore(rows[i], rows[i - 1]);
             switching = true;
         }
