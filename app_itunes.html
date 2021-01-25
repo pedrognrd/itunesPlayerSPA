@@ -28,7 +28,13 @@
 </head>
 
 <body>
-    <main class="container-fluid mt-5 mb-5 ml-0 mr-0 row justify-content-center">
+    <main class="container-fluid mt-5 ml-0 mr-0 row justify-content-center">
+        <div class="row container-fluid mb-5">
+            <h1 class="col-lg-12 mb-4" style="color: #fff;">iTunes Player API - Single Page Application</h1>
+            <h2 class="col-lg-12 mb-4" style="color: #fff;">Search a song in the iTunes database</h2>
+            <p class="col-lg-12 mb-4" style="color: #fff;">You can search not only a song but also an artist or an album, press Search and a list of ten items will be displayed in the list, if they exists!</p>
+        </div>
+        
         <!-- Card player -->
         <div class="col-xs-12 col-md-12 col-lg-3 mb-4 row my_container player ">
             <div class="col-xs-4 col-md-4 col-lg-12 player_image">
@@ -86,7 +92,7 @@
                 <nav class="navbar navbar-dark mt-4 mb-4 ml-2">
                     <form class="form-inline" _lpchecked="1">
                         <input type="text" placeholder="Search" aria-label="Search" id="input_search" value="" class="form-control mb-2 mr-sm-4 mt-2 mt-sm-0">
-                        <button value=" Search" onclick="searchingSongs();" type="button" class="btn btn-primary mb-2 mt-2 mt-sm-0" id="button_search">Buscar</button>
+                        <button value=" Search" onclick="searchingSongs();" type="button" class="btn btn-primary mb-2 mt-2 mt-sm-0" id="button_search">Search</button>
                     </form>
                 </nav>
             </div>

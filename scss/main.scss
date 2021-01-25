@@ -116,6 +116,15 @@ thead, tr {
   @include height(5, 2);
 }
 
+thead tr:hover {
+  @include backgroundColor(map-get($palette, green));
+  cursor: auto;
+}
+
+thead tr i {
+  cursor: pointer;
+}
+
 table {
   @include backgroundColor(map-get($palette, grey));
   width: (map-get(map-get($size, percentages), 100));

@@ -30,19 +30,6 @@ function loadingDefaultSong() {
 function errorsEvaluation(error) {
     modal_message = document.getElementById('modal_message');
 
-    /*if (error == 0) {
-        modal_message.innerHTML = "You must write a song in the Search area";
-        openModal();
-    }
-    if (error == 1) {
-        modal_message.innerHTML = "The song <span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> doest not exist. Try again";
-        openModal();
-    }
-    if (error == 2) {
-        modal_message.innerHTML = "<span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> hasn't been found. Try again";
-        openModal();
-    }*/
-
     switch (error) {
         case 0:
             modal_message.innerHTML = "You must write a song in the Search area";
@@ -54,6 +41,10 @@ function errorsEvaluation(error) {
             break;
         case 2:
             modal_message.innerHTML = "<span class='font-weight-bold'>" + document.getElementById("input_search").value + "</span> hasn't been found. Try again";
+            openModal();
+            break;
+        case 3:
+            modal_message.innerHTML = "Unknown error. Try again";
             openModal();
             break;
       }
@@ -112,10 +103,6 @@ function loadingTable() {
             console.log("Wrong status " + xhr.status);
             errorsEvaluation(2);
         }
-    } else {
-        // TODO: Puede que la búsqueda, aunque esté bien realizada no haya devuelto nada
-        // Deveríamos evaluar que los resultados tienen contenido y si no, mostrar un mensaje
-        console.log("Wrong response" + xhr.status);
     }
 }
 
