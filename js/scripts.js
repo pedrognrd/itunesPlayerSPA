@@ -18,6 +18,7 @@ function loadingDefaultSong() {
     // 1 Building the url
     let url = DIR_SERVIDOR_ITUNES + defaultSong;
     let url_formatted = encodeURI(url);
+    console.log("URL formatted: " + url_formatted);
     // 2 Ajax call to the server
     xhr.open('GET', url_formatted);
     xhr.onreadystatechange = loadingTable;
@@ -59,6 +60,7 @@ function searchingSongs() {
         // 1 Building the url
         let url = DIR_SERVIDOR_ITUNES + capitalizeFirstLetter(searchedSong);
         let url_formatted = encodeURI(url);
+        console.log("URL formatted: " + url_formatted);
         // 2 Ajax call to the server
         xhr.open('GET', url_formatted);
         xhr.onreadystatechange = loadingTable;
@@ -82,7 +84,9 @@ function loadingTable() {
             // And we save it in "search_result". We have DESERIALIZED it.
             search_result = JSON.parse(xhr.responseText);
             // In this way, we have two attributes in search_result
-            search_result.resultCount;
+            console.log("readyState found: " + xhr.readyState);
+            console.log("status found: " + xhr.status);
+            console.log("Results number found: " + search_result.resultCount);
             search_result.results;
 
             if (search_result.results.length > 0) {
