@@ -29,10 +29,10 @@
 
 <body>
     <main class="container-fluid mt-5 ml-0 mr-0 row justify-content-center">
-        <div class="row container-fluid mb-5">
+        <div class="row container-fluid mb-4">
             <h1 class="col-lg-12 mb-4" style="color: #fff;">iTunes Player API - Single Page Application</h1>
-            <h2 class="col-lg-12 mb-4" style="color: #fff;">Search a song in the iTunes database</h2>
-            <p class="col-lg-12 mb-4" style="color: #fff;">You can search not only a song but also an artist or an album, press Search and a list of ten items will be displayed in the list, if they exists!</p>
+            <h2 class="col-lg-12 mb-3" style="color: #fff;">Search a song in the iTunes database</h2>
+            <p class="col-lg-12 mb-3" style="color: #fff;">You can search not only a song but also an artist or an album, press Search and a list of ten items will be displayed in the list, if they exists!</p>
         </div>
         
         <!-- Card player -->
@@ -45,14 +45,14 @@
             </div>
             
             <div class="col-xs-8 col-md-8 p-4 col-lg-12 player_controls">
-                <h4 id="trackName" class="card-title mt-3" style="">Polly</h4>
-                <div class="progress mb-3">
+                <h4 id="trackName" class="card-title mt-2" style="">Polly</h4>
+                <div class="progress mb-2">
                     <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
                 <h5 id="artistName" class="card-text">Nirvana</h5>
                 <h6 id="collectionName" style="font-size: 0.8rem;">MTV Unplugged In New York (Live)</h6>
                 
-                <div style="text-align: center;font-size: 2rem;" class="m-0 mt-4 row">
+                <div style="text-align: center;font-size: 1.5rem;" class="m-0 mt-4 row">
                     <div id="iconPrevious" onclick="playPrevoius();" class="col-xs-4 col-md-4 m-0" style="width: 32%;">
                         <i aria-hidden="true" style="" class="fas fa-backward"></i>
                     </div>
@@ -89,7 +89,7 @@
                         </tr>
                     </thead>
                 </table>
-                <nav class="navbar navbar-dark mt-4 mb-4 ml-2">
+                <nav class="navbar navbar-dark mt-3 mb-2 ml-2">
                     <form class="form-inline" _lpchecked="1">
                         <input type="text" placeholder="Search" aria-label="Search" id="input_search" value="" class="form-control mb-2 mr-sm-4 mt-2 mt-sm-0">
                         <button value=" Search" onclick="searchingSongs();" type="button" class="btn btn-primary mb-2 mt-2 mt-sm-0" id="button_search">Search</button>

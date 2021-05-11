@@ -47,7 +47,7 @@ table, tr:hover, .player_controls {
 }
 
 thead, tr {
-  height: 3rem;
+  height: 4rem;
 }
 
 thead tr:hover {
@@ -66,8 +66,7 @@ table {
 
 td,
 th {
-  font-size: 0.9rem;
-  padding: 0rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 tr {
@@ -95,7 +94,7 @@ tr:hover {
   margin: 2rem;
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 60%;
 }
 
 #input_search {
@@ -116,11 +115,11 @@ tr:hover {
 }
 
 #thAlbum {
-  width: 50%;
+  width: 25%;
 }
 
 #thArtist {
-  width: 25%;
+  width: 16%;
 }
 
 #thDemo {
@@ -141,7 +140,7 @@ tr:hover {
   border-style: solid;
   border-color: white;
   border-radius: 0.25rem;
-  box-shadow: 0px 0px 40px black;
+  box-shadow: 0px 0px 100px black;
   height: 100%;
   margin: 0rem 1rem;
   padding: 0rem 0rem;
