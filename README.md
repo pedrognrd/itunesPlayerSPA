@@ -85,13 +85,26 @@ The use is very simple, you just need to open the file "app_itunes.html" in your
 
 For toggle between Fahrenheit and Celsius degrees, just press the Green "C" or "F" section  in the "The Temperature is" area:
 
+* **Home Screen**
 ![Home Screen](/img/img_01.png)
+
+* **Rollover over a song in the search results table**
 ![Rollover over a song in the search results table](/img/img_02.png)
+
+* **Playing one of the songs in the table by clicking on it**
 ![Playing one of the songs in the table by clicking on it](/img/img_03.png)
+
+* **Displaying the results of a search**
 ![Displaying the results of a search](/img/img_04.png)
+
+* **Playing one of the songs in the table after searching**
 ![Playing one of the songs in the table after searching](/img/img_05.png)
-![Showing error message if nothing has been entered in the search field ](/img/img_06.png)
-![View of the app in mobile phone size ](/img/img_07.png)
+
+* **Showing error message if nothing has been entered in the search field**
+![Showing error message if nothing has been entered in the search field](/img/img_06.png)
+
+* **View of the app in mobile phone size**
+![View of the app in mobile phone size](/img/img_07.png)
 
 ## **Credits**
 
