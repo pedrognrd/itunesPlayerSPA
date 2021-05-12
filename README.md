@@ -68,7 +68,7 @@ You can follow the next guides to use this app:
 * For local execution:
   * [Download repository in a ZIP file](https://stackoverflow.com/questions/2751227/how-to-download-source-in-zip-format-from-github).
 
-* An Online version is available in my [Codepen Profile](https://codepen.io/pedrognrd/pen/zjZvWb).
+* An Online version is available in my [iTunes Player API - Single Page Application in my Codepen Profile](https://codepen.io/pedrognrd/pen/yLaWGQq).
 
 ## **Usage**
 
